@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from analyzer import NetworkAnalyzer
 
 def main():
     load_dotenv()
@@ -9,6 +10,13 @@ def main():
     else:
         print("[OK]: Configuration loaded successfully.")
     print("SentinelNode is starting...")
+
+    analyzer = NetworkAnalyzer()
+    connections = analyzer.get_current_connections()
+
+    print(f"Found {len(connections)} active connections.")
+    for ip, port in connections:
+        print(f"Target: {ip}:{port}")
 
 if __name__ == "__main__":
     main()
