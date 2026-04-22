@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from analyzer import NetworkAnalyzer
+from notifier import DiscordNotifier
 
 def main():
     load_dotenv()
@@ -12,11 +13,13 @@ def main():
     print("SentinelNode is starting...")
 
     analyzer = NetworkAnalyzer()
+    notifier = DiscordNotifier(webhook_url)
     connections = analyzer.get_current_connections()
 
-    print(f"Found {len(connections)} active connections.")
-    for ip, port in connections:
-        print(f"Target: {ip}:{port}")
+    if connections:
+        alert_msg = f"Detected {len(connections)} active connections."
+        notifier.send_alert("Network Status", alert_msg)
+        print("[OK]: Alert sent to Discord.")
 
 if __name__ == "__main__":
     main()
